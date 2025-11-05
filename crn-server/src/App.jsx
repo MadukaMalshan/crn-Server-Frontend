@@ -3,6 +3,9 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import sampleImg from './assets/alien-svgrepo-com (1).svg'
 import './App.css'
+import Header from './Header.jsx'
+import Footer from './Footer.jsx'
+import Food from './Food.jsx'
 
 // function App() {
 //   const [count, setCount] = useState(0)
@@ -67,50 +70,60 @@ import './App.css'
       //   )
       // }
 
-      function App(){
-      const[countries, setCountries] = useState([]);
+      // function App(){
+      // const[countries, setCountries] = useState([]);
 
-        // const product =[
-        //   {tittle:"Cabbage", id:1},
-        //   {tittle:"Onion", id:2},
-        //   {tittle:"Carrot", id:3},
-        //   {tittle:"Potato", id:4},
-        // ];
+      //   // const product =[
+      //   //   {tittle:"Cabbage", id:1},
+      //   //   {tittle:"Onion", id:2},
+      //   //   {tittle:"Carrot", id:3},
+      //   //   {tittle:"Potato", id:4},
+      //   // ];
 
-        // const listItems = product.map(product >
-        //   <li key={product.id}>
-        //     {product.tittle}
-        //   </li>
-        // );
-        // return(
-        //   <>
+      //   // const listItems = product.map(product >
+      //   //   <li key={product.id}>
+      //   //     {product.tittle}
+      //   //   </li>
+      //   // );
+      //   // return(
+      //   //   <>
 
-        //   <ul>{listItems}</ul>
-        //   <button onClick={}></button>
+      //   //   <ul>{listItems}</ul>
+      //   //   <button onClick={}></button>
           
-        //   </>
-        // )
+      //   //   </>
+      //   // )
 
-        useEffect(() => {
-          function getData(){
-          fetch("https://restcountries.com/v3.1/name/sri%20lanka").then((response) => response.json()).then((data) => {
-            setCountries(data);
-            console.log(data);
-          })
-        }
-          getData();
-        }, []);
+      //   useEffect(() => {
+      //     function getData(){
+      //     fetch("https://restcountries.com/v3.1/name/sri%20lanka").then((response) => response.json()).then((data) => {
+      //       setCountries(data);
+      //       console.log(data);
+      //     })
+      //   }
+      //     getData();
+      //   }, []);
 
-        return(
-          <>
-          {
-            countries.map((countries)=>{
+      //   return(
+      //     <>
+      //     {
+      //       countries.map((countries)=>{
               
-            })
-          }
-          </>
-        )
-      }
+      //       })
+      //     }
+      //     </>
+      //   )
+      // }
 // }
+
+function App(){
+  return(
+    <>
+    <Header></Header>
+    <Food></Food>
+    <Footer></Footer>
+    </>
+  );
+}
 
 export default App
