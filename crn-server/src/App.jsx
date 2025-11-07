@@ -1,134 +1,80 @@
-import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import sampleImg from './assets/alien-svgrepo-com (1).svg'
-import './App.css'
-import Header from './Header.jsx'
-import Footer from './Footer.jsx'
-import Food from './Food.jsx'
-import Card from './Card.jsx'
-import Student from './Student.jsx'
+import { useEffect, useState } from 'react';
+import './App.css';
+import CustomerForm from './CustomerForm';
+import CustomerList from './CustomerList';
 
-// function App() {
-//   const [count, setCount] = useState(0)
-//   const [name, setName] = useState("Name");
-//   const [age, setAge] = useState("Age");
+function App() {
+  const [customers, setCustomers] = useState([]);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
 
-  // return (
-    // <>
-    //   <div>
-    //     <a href="https://vite.dev" target="_blank">
-    //       <img src={viteLogo} className="logo" alt="Vite logo" />
-    //     </a>
-    //     <a href="https://react.dev" target="_blank">
-    //       <img src={sampleImg} className="logo react" alt="React logo" />
-    //     </a>
-    //   </div>
-    //   <h1>{name}</h1>
-    //   <h1>{age}</h1>
-    //   <div className="card">
-    //     <button onClick={() => setCount((count) => count + 1)}>
-    //       count is {count}
-    //     </button>
-    //     <button onClick={()=> setName((name) => " Name is Maduka")}>
-    //       Set Name
-    //     </button>
-    //     <button onClick={()=> setAge((age) => "Age is 21")}>
-    //       Set Age
-    //     </button>
-    //     <p>
-    //       Edit <code>src/App.jsx</code> and save to test HMR
-    //     </p>
-    //   </div>
-    //   <p className="read-the-docs">
-    //     Click on the Vite and React logos to learn more
-    //   </p>
-    // </>
+  useEffect(() => {
+    fetch("http://localhost:8080/customer/all")
+      .then((response) => response.json())
+      .then((data) => {
+        setCustomers(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
 
-    
-  // )
-      // function App() {
-      //   const customer = {
-      //     name:"Maduka",
-      //     age: 21,
-      //     address : "Piliyandala",
-      //     Salary : 1000000.0
-      //   }
-      //   const test = () =>{
-      //     alert("Hello World");
-      //   }
-      //   return(
-      //     <>
-      //       <h1>Hello</h1>
+  const handleAddCustomer = (customer) => {
+    fetch("http://localhost:8080/customer/save", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(customer),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setCustomers([...customers, data]);
+      });
+  };
 
-      //       <ul>
-      //         <li>Name: {customer.name}</li>
-      //         <li>Age: {customer.age}</li>
-      //         <li>Address: {customer.address}</li>
-      //         <li>Salary: {customer.Salary}</li>
-      //       </ul>
-      //       <button onClick={test}>Click Me</button>
-      //     </>
-      //   )
-      // }
+  const handleUpdateCustomer = (customer) => {
+    fetch(`http://localhost:8080/customer/${customer.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(customer),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setCustomers(
+          customers.map((c) => (c.id === customer.id ? data : c))
+        );
+      });
+  };
 
-      // function App(){
-      // const[countries, setCountries] = useState([]);
+  const handleDeleteCustomer = (id) => {
+    fetch(`http://localhost:8080/customer/${id}`, {
+      method: "DELETE",
+    }).then(() => {
+      setCustomers(customers.filter((c) => c.id !== id));
+    });
+  };
 
-      //   // const product =[
-      //   //   {tittle:"Cabbage", id:1},
-      //   //   {tittle:"Onion", id:2},
-      //   //   {tittle:"Carrot", id:3},
-      //   //   {tittle:"Potato", id:4},
-      //   // ];
+  const handleEditCustomer = (customer) => {
+    setSelectedCustomer(customer);
+  };
 
-      //   // const listItems = product.map(product >
-      //   //   <li key={product.id}>
-      //   //     {product.tittle}
-      //   //   </li>
-      //   // );
-      //   // return(
-      //   //   <>
-
-      //   //   <ul>{listItems}</ul>
-      //   //   <button onClick={}></button>
-          
-      //   //   </>
-      //   // )
-
-      //   useEffect(() => {
-      //     function getData(){
-      //     fetch("https://restcountries.com/v3.1/name/sri%20lanka").then((response) => response.json()).then((data) => {
-      //       setCountries(data);
-      //       console.log(data);
-      //     })
-      //   }
-      //     getData();
-      //   }, []);
-
-      //   return(
-      //     <>
-      //     {
-      //       countries.map((countries)=>{
-              
-      //       })
-      //     }
-      //     </>
-      //   )
-      // }
-// }
-
-function App(){
-  return(
+  return (
     <>
-    <Header></Header>
-    <Card></Card>
-    <Card></Card>
-    <Food></Food>
-    <Footer></Footer>
-    <Student name ="Spongebob" age = "20" isStudent={false} ></Student>
+      <h1>Customer Management</h1>
+      <CustomerForm
+        onAddCustomer={handleAddCustomer}
+        onUpdateCustomer={handleUpdateCustomer}
+        selectedCustomer={selectedCustomer}
+      />
+      <CustomerList
+        customers={customers}
+        onEdit={handleEditCustomer}
+        onDelete={handleDeleteCustomer}
+      />
     </>
   );
 }
 
-export default App
+export default App;
